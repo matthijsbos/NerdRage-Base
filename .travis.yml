@@ -8,7 +8,6 @@ services:
 env:
   global:
    - DOCKER_CLI_EXPERIMENTAL=enabled
-   - DOCKER_BUILDKIT=1
    - DOCKER_REPO=matthijsbos/nerdrage-base
    - DOCKER_TAG=latest
 arch:
@@ -22,16 +21,12 @@ script:
   - if [ "$TRAVIS_BRANCH" = "master" ]; then docker push ${DOCKER_REPO}:${DOCKER_TAG}-${TRAVIS_CPU_ARCH} ; fi
 
 stages:
-  - build
+  - test
   - name: deploy
     if: branch = master
 
 jobs:
   include:
-    - arch: amd64
-      stage: build
-    - arch: arm64
-      stage: build
     - arch: amd64
       stage: deploy
       script: 

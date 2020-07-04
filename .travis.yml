@@ -1,31 +1,27 @@
 ---
-language: generic
+language: minimal
+os: linux
 dist: bionic
-sudo: required 
+sudo: required
 services:
   - docker
-
-# before_script:
-#   - docker login -u $DOCKER_USER -p $DOCKER_PASS
+env:
+  global:
+   - DOCKER_REPO=matthijsbos/nerdrage-base
+before_script:
+  - docker login -u $DOCKER_USER -p $DOCKER_PASS
+script:
+  - docker build --pull -t ${DOCKER_REPO}:${TRAVIS_COMMIT::8}-{TRAVIS_CPU_ARCH} .
+  - docker push ${DOCKER_REPO}:${TRAVIS_COMMIT::8}-{TRAVIS_CPU_ARCH}
 
 jobs:
   include:
-    - name: build platform linux/amd64
-      os: linux
-      dist: bionic
-      arch: amd64
+    - arch: amd64
       stage: build
-      script:
-        - docker build --pull -t matthijsbos/nerdrage-base:latest-amd64 .
-    - name: build platform linux/arm64
-      os: linux
-      dist: bionic
-      arch: arm64
+    - arch: arm64
       stage: build
-      script:
-        - docker build --pull -t matthijsbos/nerdrage-base:latest-arm64 .
     # - name: create manifest for multi platform image
-    #   stage: manifest
+    #   stage: deploy
     #   script: 
     #     - docker pull matthijsbos/nerdrage-base:latest-amd64
     #     - docker pull matthijsbos/nerdrage-base:latest-arm64

@@ -16,14 +16,14 @@ jobs:
       arch: amd64
       stage: build
       script:
-        - docker build --pull --progress plain -t matthijsbos/nerdrage-base:latest-amd64 .
+        - docker build --pull -t matthijsbos/nerdrage-base:latest-amd64 .
     - name: build platform linux/arm64
       os: linux
       dist: bionic
       arch: arm64
       stage: build
       script:
-        - docker build --pull --progress plain -t matthijsbos/nerdrage-base:latest-arm64 .
+        - docker build --pull -t matthijsbos/nerdrage-base:latest-arm64 .
     # - name: create manifest for multi platform image
     #   stage: manifest
     #   script: 

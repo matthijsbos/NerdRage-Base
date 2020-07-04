@@ -39,12 +39,16 @@ jobs:
       stage: build
       script:
         - docker buildx build --push --progress plain --platform linux/arm/v7 -t matthijsbos/nerdrage-base:latest-armv7 .
+    - name: build platform linux/arm/v7
+      stage: build
+      script:
+        - docker buildx build --push --progress plain --platform linux/arm64 -t matthijsbos/nerdrage-base:latest-armv64 .
     - name: create manifest for multi platform image
       stage: manifest
       script: 
         - docker pull matthijsbos/nerdrage-base:latest-amd64
+        - docker pull matthijsbos/nerdrage-base:latest-arm64
         - docker pull matthijsbos/nerdrage-base:latest-armv7
-        - docker manifest create matthijsbos/nerdrage-base:latest matthijsbos/nerdrage-base:latest-amd64 matthijsbos/nerdrage-base:latest-armv7
+        - docker manifest create matthijsbos/nerdrage-base:latest matthijsbos/nerdrage-base:latest-amd64 matthijsbos/nerdrage-base:latest-arm64 matthijsbos/nerdrage-base:latest-armv7
         - docker manifest push matthijsbos/nerdrage-base:latest
-    
-    
+  

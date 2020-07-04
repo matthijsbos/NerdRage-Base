@@ -29,6 +29,10 @@ stages:
 jobs:
   include:
     - arch: amd64
+      stage: build
+    - arch: arm64
+      stage: build
+    - arch: amd64
       stage: deploy
       script: 
         - docker pull ${DOCKER_REPO}:${DOCKER_TAG}-amd64

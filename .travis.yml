@@ -2,53 +2,34 @@
 language: generic
 dist: bionic
 sudo: required 
-env:
-  "DOCKER_CLI_EXPERIMENTAL": "enabled"
-  "DOCKER_BUILDKIT": "1"
 services:
   - docker
-install:
-  # Install latest docker and print version info
-  - curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
-  - sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
-  - sudo apt-get update
-  - sudo apt-get -y -o Dpkg::Options::="--force-confnew" install docker-ce
-  - docker version
-  - docker info
-  # install qemu binaries\
-  - sudo apt-get install qemu binfmt-support qemu-user-static
 
-before_script:
-  - docker login -u $DOCKER_USER -p $DOCKER_PASS
-  # register QEMU in the build agent according to 
-  # https://medium.com/@quentin.mcgaw/cross-architecture-docker-builds-with-travis-ci-arm-s390x-etc-8f754e20aaef
-  - docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
-  # Create buildx builder
-  - docker buildx create --name builder --use
-  # Inspect and ensure builder is running using --bootstrap
-  - docker buildx inspect --bootstrap builder
-  # Build images for multiple platforms using buildx
+# before_script:
+#   - docker login -u $DOCKER_USER -p $DOCKER_PASS
 
 jobs:
   include:
     - name: build platform linux/amd64
       os: linux
+      dist: bionic
       arch: amd64
       stage: build
       script:
-        - docker buildx build --push --progress plain --platform linux/amd64 -t matthijsbos/nerdrage-base:latest-amd64 .
+        - docker build --pull --progress plain -t matthijsbos/nerdrage-base:latest-amd64 .
     - name: build platform linux/arm64
       os: linux
-      arch: amd64
+      dist: bionic
+      arch: arm64
       stage: build
       script:
-        - docker buildx build --push --progress plain --platform linux/arm64 -t matthijsbos/nerdrage-base:latest-arm64 .
-    - name: create manifest for multi platform image
-      stage: manifest
-      script: 
-        - docker pull matthijsbos/nerdrage-base:latest-amd64
-        - docker pull matthijsbos/nerdrage-base:latest-arm64
-        - docker pull matthijsbos/nerdrage-base:latest-armv7
-        - docker manifest create matthijsbos/nerdrage-base:latest matthijsbos/nerdrage-base:latest-amd64 matthijsbos/nerdrage-base:latest-arm64 matthijsbos/nerdrage-base:latest-armv7
-        - docker manifest push matthijsbos/nerdrage-base:latest
+        - docker build --pull --progress plain -t matthijsbos/nerdrage-base:latest-arm64 .
+    # - name: create manifest for multi platform image
+    #   stage: manifest
+    #   script: 
+    #     - docker pull matthijsbos/nerdrage-base:latest-amd64
+    #     - docker pull matthijsbos/nerdrage-base:latest-arm64
+    #     - docker pull matthijsbos/nerdrage-base:latest-armv7
+    #     - docker manifest create matthijsbos/nerdrage-base:latest matthijsbos/nerdrage-base:latest-amd64 matthijsbos/nerdrage-base:latest-arm64 matthijsbos/nerdrage-base:latest-armv7
+    #     - docker manifest push matthijsbos/nerdrage-base:latest
   

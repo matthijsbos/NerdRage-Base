@@ -11,8 +11,8 @@ env:
 before_script:
   - docker login -u $DOCKER_USER -p $DOCKER_PASS
 script:
-  - docker build --pull -t ${DOCKER_REPO}:${TRAVIS_COMMIT::8}-{TRAVIS_CPU_ARCH} .
-  - docker push ${DOCKER_REPO}:${TRAVIS_COMMIT::8}-{TRAVIS_CPU_ARCH}
+  - docker build --pull -t ${DOCKER_REPO}:${TRAVIS_COMMIT::8}-${TRAVIS_CPU_ARCH} .
+  - docker push ${DOCKER_REPO}:${TRAVIS_COMMIT::8}-${TRAVIS_CPU_ARCH}
 
 jobs:
   include:

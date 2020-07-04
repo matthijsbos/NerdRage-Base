@@ -32,14 +32,20 @@ before_script:
 jobs:
   include:
     - name: build platform linux/amd64
+      os: linux
+      arch: amd64
       stage: build
       script:
         - docker buildx build --push --progress plain --platform linux/amd64 -t matthijsbos/nerdrage-base:latest-amd64 .
     - name: build platform linux/arm64
+      os: linux
+      arch: arm64
       stage: build
       script:
         - docker buildx build --push --progress plain --platform linux/arm64 -t matthijsbos/nerdrage-base:latest-armv64 .
     - name: build platform linux/arm/v7
+      os: linux
+      arch: arm64
       stage: build
       script:
         - docker buildx build --push --progress plain --platform linux/arm/v7 -t matthijsbos/nerdrage-base:latest-armv7 .

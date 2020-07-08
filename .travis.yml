@@ -1,8 +1,7 @@
 ---
-language: minimal
+language: shell
 os: linux
 dist: bionic
-sudo: required
 services:
   - docker
 env:
@@ -21,12 +20,16 @@ script:
   - if [ "$TRAVIS_BRANCH" = "master" ]; then docker push ${DOCKER_REPO}:${DOCKER_TAG}-${TRAVIS_CPU_ARCH} ; fi
 
 stages:
-  - test
+  - build
   - name: deploy
     if: branch = master
 
 jobs:
   include:
+    - arch: amd64
+      stage: build
+    - arch: arm64
+      stage: build
     - arch: amd64
       stage: deploy
       script: 

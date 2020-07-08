@@ -9,9 +9,6 @@ env:
    - DOCKER_CLI_EXPERIMENTAL=enabled
    - DOCKER_REPO=matthijsbos/nerdrage-base
    - DOCKER_TAG=latest
-arch:
-  - amd64
-  - arm64
 
 before_script:
   - docker login -u $DOCKER_USER -p $DOCKER_PASS
